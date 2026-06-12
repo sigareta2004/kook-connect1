@@ -223,15 +223,15 @@
       width: 100vw; height: 100vh;
       background: rgba(0, 0, 0, 0.8);
       z-index: 999999;
-      backdrop-filter: blur(5px);
       display: flex;
       justify-content: center;
       align-items: center;
       opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s, visibility 0.3s;
+      pointer-events: none;
+      transition: opacity 0.15s;
+      will-change: opacity;
     }
-    .o-mod.show { opacity: 1; visibility: visible; }
+    .o-mod.show { opacity: 1; pointer-events: auto; }
 
     .m-box {
       background: var(--white);
@@ -241,6 +241,7 @@
       width: 440px;
       transform: scale(0.9) translateY(20px);
       transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      will-change: transform;
     }
     .o-mod.show .m-box {
       transform: scale(1) translateY(0);
@@ -453,6 +454,7 @@
       top: 50%; left: 50%;
       transform: translate(-50%, -50%) scale(0.95);
       transition: transform 0.2s ease-out;
+      will-change: transform;
     }
     .o-mod.show .b-win {
       transform: translate(-50%, -50%) scale(1);
