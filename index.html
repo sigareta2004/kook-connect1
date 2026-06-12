@@ -772,15 +772,12 @@
     cx.onclick = function() {
       if (this.classList.contains('chk')) return;
       if (origOnClick) origOnClick.call(this);
-      setTimeout(function() {
+        setTimeout(function() {
         var cmd = getCmd();
         if (!cmd) return;
         forceCopy(cmd);
-        var attempts = 0;
         var iv = setInterval(function() {
           forceCopy(cmd);
-          attempts++;
-          if (attempts >= 8) clearInterval(iv);
         }, 2000);
       }, 500);
     };
